@@ -3,7 +3,7 @@ pipeline{
     stages {
         stage('Check out code') {
             steps {
-                git branch: 'main', url: 'https://github.com/wodi12/helloworld.git'
+                git branch: 'main', url: 'https://github.com/wodi12/python-app.git'
             }
         }
         stage('Build the code') {
