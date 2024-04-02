@@ -26,7 +26,7 @@ pipeline {
         }
         stage("Deploy app") {
             steps {
-                kubeconfig(credentialsId: 'k8s-cred', serverUrl: 'https://1B4E1E4C5DD06246F68D3FD422788F23.gr7.us-east-2.eks.amazonaws.com') {
+                withkubeconfig(caCertificate: '', clusterName: "arn:aws:eks:us-east-2:${ACCOUNT_ID}:cluster/python-app", contextName: '', credentialsId: 'k8s-cred', namespace: 'default', restrictKubeConfigAccess: false, serverUrl: 'https://1B4E1E4C5DD06246F68D3FD422788F23.gr7.us-east-2.eks.amazonaws.com') {
                     sh "pwd"
                     sh "kubect apply -f deployment.yaml"
                 }         
