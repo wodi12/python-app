@@ -1,0 +1,34 @@
+pipeline {
+    agent any
+    environment {
+        APP_NAME = "python-app"
+    }
+    stages {
+        stage("Cleanup Workspace") {
+            steps {
+                cleanWs()
+            }
+        }
+        stage("Check out code") {
+            steps {
+                git branch: 'main', url: 'https://github.com/wodi12/python-app.git'
+            }
+        }
+        stage("Update deployment image tag") {
+            steps {
+                sh """ 
+                    cd manifests
+                    cat deployment.yaml
+                    sed -i 's/${APP_NAME}/${APP_NAME}:${IMAGE_TAG/g}' deployment.yaml
+                """
+            }
+        }
+        stage("Deploy app") {
+            steps {
+                kubeconfig(credentialsId: 'k8s-cred', serverUrl: 'https://1B4E1E4C5DD06246F68D3FD422788F23.gr7.us-east-2.eks.amazonaws.com') {
+                    sh "kubect apply -f deployment.yaml"
+                }         
+            }
+        }
+    }
+}

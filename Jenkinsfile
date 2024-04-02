@@ -4,6 +4,7 @@ pipeline{
         APP_NAME = "python-app"
         RELEASE = "1.0.0"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+        JENKINS_API_TOKEN = credentials('JENKINS_API_TOKEN')
     }
     stages {
         stage('Check out code') {
