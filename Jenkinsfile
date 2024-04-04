@@ -22,7 +22,7 @@ pipeline{
         stage('Push image to ECR') {
             steps {
                 script {
-                    docker.withRegistry("https://${ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com","ecr:${AWS_DEFAULT_REGION}:aws-cred") {
+                    docker.withRegistry("https://${ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com","ecr:${AWS_DEFAULT_REGION}:aws-cred") {
                     app.push("${IMAGE_TAG}")
                     app.push("latest")
                     }
@@ -36,10 +36,10 @@ pipeline{
                 }
             }
         }
-        post {
-            failure {
-                slackSend(channel: '#alerts', message: "${BUILD_TAG} failed!")
-            }
+    }
+    post {
+        failure {
+            slackSend(channel: '#alerts', message: "${BUILD_TAG} failed!")
         }
     }
 }
