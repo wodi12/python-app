@@ -22,7 +22,7 @@ pipeline{
         stage('Push image to ECR') {
             steps {
                 script {
-                    docker.withRegistry("https://${ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com",'ecr:us-east-2:aws-cred') {
+                    docker.withRegistry("https://${ACCOUNT_ID}.dkr.ecr.us-east-2.amazonaws.com","ecr:${AWS_DEFAULT_REGION}:aws-cred") {
                     app.push("${IMAGE_TAG}")
                     app.push("latest")
                     }
