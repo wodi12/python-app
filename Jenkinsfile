@@ -32,7 +32,7 @@ pipeline{
         stage('Trigger CD pipeline') {
             steps {
                 script {
-                    sh "curl -v -k --user admin:${JENKINS_API_TOKEN} -X POST -H 'cache-control: no-chache' -H 'content-type: application/x-www-form-urlencoded' -data 'IMAGE_TAG=${IMAGE_TAG}' 'http://jenkins.sprigsh.click:8080/job/python-app-deploy/buildWithParameters?token=deploy-token'"                   
+                    sh "curl --user admin:${JENKINS_API_TOKEN} -X POST ${JENKINS_URL}/job/python-app-deploy/buildWithParameters?token=deploy-token -F IMAGE_TAG=${IMAGE_TAG}"                   
                 }
             }
         }
