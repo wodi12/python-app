@@ -32,7 +32,7 @@ pipeline{
         stage('Trigger CD pipeline') {
             steps {
                 script {
-                    sh "curl --user admin:${JENKINS_API_TOKEN} -X POST ${JENKINS_URL}/job/python-app-deploy/buildWithParameters?token=deploy-token -F IMAGE_TAG=${IMAGE_TAG}"                   
+                    sh 'curl --user admin:${JENKINS_API_TOKEN} -X POST ${JENKINS_URL}/job/python-app-deploy/buildWithParameters?token=deploy-token -F IMAGE_TAG=${IMAGE_TAG}'
                 }
             }
         }
