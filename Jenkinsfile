@@ -36,5 +36,10 @@ pipeline{
                 }
             }
         }
+        post {
+            failure {
+                slackSend(channel: '#alerts', message: "${BUILD_TAG} failed!")
+            }
+        }
     }
 }
