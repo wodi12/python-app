@@ -26,17 +26,21 @@ pipeline {
         }
         stage("Deploy app") {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: "arn:aws:eks:us-east-2:${ACCOUNT_ID}:cluster/python-app", contextName: '', credentialsId: 'k8s-cred', namespace: 'default', restrictKubeConfigAccess: false, serverUrl: 'https://1B4E1E4C5DD06246F68D3FD422788F23.gr7.us-east-2.eks.amazonaws.com') {
+                withKubeConfig(caCertificate: '', clusterName: "arn:aws:eks:us-east-2:${ACCOUNT_ID}:cluster/python-app", contextName: '', credentialsId: 'k8s-cred', namespace: 'default', restrictKubeConfigAccess: false, serverUrl: "https://${CLUSTER_ID}.gr7.us-east-2.eks.amazonaws.com") {
                     sh """
                         curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.29.0/2024-01-04/bin/linux/amd64/kubectl
                         chmod +x ./kubectl
                         mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
-
                         cd manifests
                         kubectl apply -f deployment.yaml
                     """
                 }         
             }
         }
+        post {
+        failure {
+            slackSend(channel: '#alerts', message: "${BUILD_TAG} failed!")
+        }
+    }
     }
 }
