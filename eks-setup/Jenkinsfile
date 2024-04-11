@@ -1,0 +1,73 @@
+pipeline{
+    agent any
+    options {
+        ansiColor('xterm')
+    }
+    stages {
+        stage('Check out code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/wodi12/python-app.git'
+            }
+        }
+        stage('Initialize') {
+            steps {
+                script {
+                    sh """
+                        pwd
+                        cd eks-setup/terraform
+                        pwd
+                        terraform init
+                    """
+                }
+            }
+        }
+        stage('tf plan') {
+            steps {
+                script {
+                    sh """
+                        cd eks-setup/terraform
+                        terraform plan -out=tfplan
+                    """
+                }
+            }
+        }
+        stage('Manual Review') {
+            steps {
+                slackSend(channel: '#alerts', color: "warning", message: "Approve terraform plan to apply or deny to cancel build")
+                input('Review Terraform Plan and Approve or Reject')
+            }
+        }
+        stage('tf apply/destroy') {
+            steps {
+                script {
+                    sh """
+                        cd eks-setup/terraform
+                        terraform $action -auto-approve 
+                    """
+                }
+            }
+        }
+        // stage('Bootstrap cluster') {
+        //     steps {
+        //         script {
+        //             sh "cd eks-setup/bootstrap"
+        //             def CLUSTER_ENDPOINT = sh(script: 'aws eks describe-cluster --name python-app --query cluster.endpoint --output text', returnStdout: true).trim()
+        //             withKubeConfig(caCertificate: '', clusterName: "arn:aws:eks:${AWS_DEFAULT_REGION}:${ACCOUNT_ID}:cluster/python-app", contextName: '', credentialsId: 'k8s-cred', namespace: 'default', restrictKubeConfigAccess: false, serverUrl: "${CLUSTER_ENDPOINT}") {
+        //                 sh """
+        //                     cd eks-setup/bootstrap
+        //                     curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.29.0/2024-01-04/bin/linux/amd64/kubectl
+        //                     chmod +x ./kubectl
+        //                     mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+        //                     kubectl apply -f rbac.yaml
+        //                 """
+        //             }  
+        //         }
+        //     }
+        // }
+    }
+    post {
+        failure {
+            slackSend(channel: '#alerts', color: "danger", message: "${BUILD_TAG} failed!")
+        }
+    }
+}
