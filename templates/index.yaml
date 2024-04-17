@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Joke Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
+            height: 100vh; /* Full viewport height */
+            background-color: #f8f9fa; /* Light gray background */
+        }
+
+        .joke-container {
+            background-color: #fff; /* White background */
+            padding: 20px;
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Drop shadow effect */
+            max-width: 600px; /* Limit width to 600px */
+            text-align: center; /* Center text */
+        }
+
+        .joke-text {
+            color: #333; /* Dark gray text color */
+            font-size: 2em; /* Larger font size */
+            margin: 0; /* Remove default margin */
+        }
+    </style>
+</head>
+<body>
+    <div class="joke-container">
+        <h1> Random Jokes {{ laughing_emoji }} </h1>
+        <p class="joke-text">{{ joke }}</p>
+    </div>
+</body>
+</html>
