@@ -22,10 +22,13 @@ apiVersion: v1
 kind: Service
 metadata:
   name: flask-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:us-east-2:381492292155:certificate/27d5a7d4-d1ac-4a33-95ee-17f9ee1859f0
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
 spec:
   type: LoadBalancer
   selector:
     app: flask-app
   ports:
-  - port: 80
+  - port: 443
     targetPort: 5000
