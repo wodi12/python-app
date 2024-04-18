@@ -17,4 +17,5 @@ It utilizes a Jenkins pipeline to build a docker image for the application, push
 - Amazon Elastic Kubernetes Service (Amazon EKS) 
 - Amazon Simple Storage Service (Amazon S3)
 - Amazon Route53
-- Elastic Load Balancing (ELB) 
+- Elastic Load Balancing (ELB)
+- AWS Certificate Manager
