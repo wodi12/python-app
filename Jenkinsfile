@@ -39,7 +39,7 @@ pipeline{
     }
     post {
         failure {
-            slackSend(channel: '#alerts', message: "${BUILD_TAG} failed!")
+            slackSend(channel: '#alerts', color: "danger", message: "${BUILD_TAG} failed!")
         }
     }
 }
