@@ -1,11 +1,12 @@
-from flask import Flask
+from flask import Flask, render_template
+import pyjokes
+from emoji import emojize
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    return "Hello World"
-
-
-app.run(host="0.0.0.0", port=5000)
+    joke = pyjokes.get_joke()
+    laughing_emoji = emojize(":rolling_on_the_floor_laughing:")
+    return render_template('index.html', joke=joke, laughing_emoji=laughing_emoji)
